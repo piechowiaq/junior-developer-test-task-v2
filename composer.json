@@ -1,0 +1,15 @@
+{
+    "name": "barto/junior-developer-test-task-v2",
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bartosz Piechowiak",
+            "email": "piechowiaq@gmail.com"
+        }
+    ],
+    "require": {}
+}
