@@ -7,9 +7,11 @@ class Router
     protected array $routes = [];
 
     public Request $request;
+    public Response $response;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, Response $response)
     {
+        $this->response =$response;
         $this->request = $request;
     }
 
@@ -26,7 +28,8 @@ class Router
         $callback = $this->routes[$method][$path] ?? false;
 
         if ($callback === false){
-            return "Not found";
+            $this->response->setStatusCode(404);
+            return 'Not Found';
         }
 
         if(is_string($callback)){
@@ -39,7 +42,7 @@ class Router
 
     private function renderView($view)
     {
-        include_once __DIR__."/../views/$view.php";
+        include_once Application::$ROOT_DIR."/views/$view.php";
     }
 
 }
