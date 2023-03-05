@@ -31,6 +31,8 @@ class ProductController extends Controller
     {
         $productType = $request->getData()['type'];
 
+
+
         $registry = [
             'furniture' => Furniture::class,
             'dvd' => DVD::class,
@@ -43,13 +45,18 @@ class ProductController extends Controller
 
         $productClass = $registry[$productType];
 
-        $product = new $productClass($request->getData());
+        $sku = $request->getData()['sku'];
+        $name = $request->getData()['name'];
+        $price = $request->getData()['price'];
+        $attributes = $request->getData()['attributes'];
 
 
+        $product = new $productClass($sku, $name, $price,  $attributes);
 
-
-
-
+        echo "<pre>";
+        var_dump($product);
+        echo "</pre>";
+        die();
 
         echo 'Hello from store';
     }

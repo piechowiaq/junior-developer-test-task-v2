@@ -4,15 +4,15 @@ namespace app\models;
 
 class DVD extends Product
 {
-    private int $size;
+    public array $attributes = [];
 
-    public function __construct($sku,$name, $price, $size) {
-        parent::__construct($sku, $name, $price, []);
-        $this->size = $size;
+    public function __construct($sku,$name, $price, $attributes) {
+        parent::__construct($sku, $name, $price);
+        $this->attributes = $attributes;
     }
 
     public function getAttributes()
     {
-        return "Size: " . $this->size . " MB";
+        return "Size: " . $this->attributes['size'] . " MB";
     }
 }

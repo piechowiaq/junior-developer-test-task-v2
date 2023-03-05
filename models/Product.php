@@ -6,14 +6,14 @@ abstract class Product {
 
     protected string $sku;
     protected string $name;
-    protected int $price;
-    protected array $attributes = [];
+    protected string $price;
 
-    public function __construct($sku, $name, $price, $attributes) {
+
+    public function __construct($sku, $name, $price) {
         $this->sku = $sku;
         $this->name = $name;
         $this->price = $price;
-        $this->attributes = $attributes;
+
     }
 
     public function getSku(): string

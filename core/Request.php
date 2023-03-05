@@ -27,6 +27,12 @@ class Request
         if($this->getMethod() === 'post'){
             foreach ($_POST as $key => $value){
                 $data[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+
+                if (is_array($value)) {
+                    foreach ($value as $attrKey => $attrValue) {
+                        $data[$key][$attrKey] = filter_var($attrValue, FILTER_SANITIZE_SPECIAL_CHARS);
+                    }
+                }
             }
         }
 
