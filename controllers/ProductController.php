@@ -8,6 +8,7 @@ use app\core\Request;
 use app\models\Furniture;
 use app\models\DVD;
 use app\models\Book;
+use app\models\Product;
 
 class ProductController extends Controller
 {
@@ -28,19 +29,27 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $productType = $request->getData()['type'];
+
+        $registry = [
+            'furniture' => Furniture::class,
+            'dvd' => DVD::class,
+            'book' => Book::class,
+        ];
+
+        if (!array_key_exists($productType, $registry)) {
+            echo 'Invalid product type';
+        }
+
+        $productClass = $registry[$productType];
+
+        $product = new $productClass($request->getData());
 
 
-        $product = str_replace('"', '', $request->getData()['type']);
 
 
 
-        $product = new $product('kjljlk', 'naamk', '2626', 5,5,5);
 
-        echo "<pre>";
-        var_dump($product);
-        echo "</pre>";
-
-        die();
 
         echo 'Hello from store';
     }

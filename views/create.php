@@ -27,14 +27,14 @@
 
 
                     <select v-model="selected" name="type" id="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="DVD">DVD</option>
-                        <option value="Furniture">Furniture</option>
-                        <option value="Book">Book</option>
+                        <option value="dvd">DVD</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="book">Book</option>
 
                     </select>
 
                 </div>
-                <div v-if="selected == 'DVD'" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 ">
+                <div v-if="selected == 'dvd'" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 ">
 
                     <div>
                         <label for="size" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Size (MB)</label>
@@ -44,7 +44,7 @@
 
 
                 </div>
-                <div v-if="selected == 'Furniture'" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700  ">
+                <div v-if="selected == 'furniture'" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700  ">
                     <div>
                         <label for="height" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Height (CM)</label>
                         <input type="text" id="height" name="height" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -62,7 +62,7 @@
 
 
                 </div>
-                <div v-if="selected == 'Book'" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700      ">
+                <div v-if="selected == 'book'" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700      ">
                     <div>
                         <label for="weight" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Weight (KG)</label>
                         <input type="text" id="weight" name="weight" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
