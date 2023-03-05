@@ -15,10 +15,21 @@ class Router
         $this->request = $request;
     }
 
-    public function get($path, $callback)
+    public function get(string $path, array $callback)
     {
         $this->routes['get'][$path] = $callback;
     }
+
+    public function post(string $path, array $callback)
+    {
+        $this->routes['post'][$path] = $callback;
+    }
+
+    public function delete(string $path, array $callback): string
+    {
+        return "Delete";
+    }
+
 
     public function resolve()
     {
@@ -36,13 +47,20 @@ class Router
             return $this->renderView($callback);
         }
 
-        return call_user_func($callback);
-
+        if (is_array($callback)) {
+            $callback[0] = new $callback[0];
+        }
+        return call_user_func($callback, $this->request);
     }
 
-    private function renderView($view)
+    public function renderView($view, $params = [])
     {
+        extract($params);
+
         include_once Application::$ROOT_DIR."/views/$view.php";
     }
+
+
+
 
 }

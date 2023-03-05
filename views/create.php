@@ -8,7 +8,7 @@
     <div class="container mx-auto px-5 pb-6 pt-20 min-h-screen body-font text-gray-600">
         <div class="-m-4 flex flex-wrap">
 
-            <form id="product_form" action="/store-product" class="w-full p-4 lg:w-1/4" method="post">
+            <form id="product_form" action="/storeproduct" class="w-full p-4 lg:w-1/4" method="post">
                 <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 ">
                     <div>
                         <label for="sku" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">SKU</label>
@@ -23,10 +23,10 @@
                         <input type="text" name="price" id="price" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
 
-                    <label for="productType" class="mt-4 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Type Switcher</label>
+                    <label for="type" class="mt-4 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Type Switcher</label>
 
 
-                    <select v-model="selected" name="productType" id="productType" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <select v-model="selected" name="type" id="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="DVD">DVD</option>
                         <option value="Furniture">Furniture</option>
                         <option value="Book">Book</option>

@@ -2,10 +2,11 @@
     <div class="container flex flex-wrap items-center justify-between mx-auto">
         <a href="/" class="flex items-center">
 
-            <span class="self-center text-xl font-semibold whitespace-nowrap mr-3 dark:text-white"> <?=  'Heading' ?></span>
+            <span class="self-center text-xl font-semibold whitespace-nowrap mr-3 dark:text-white"> <?= $heading; ?></span>
         </a>
         <div class="mt-5 flex lg:mt-0 lg:ml-4">
-            <?php if ($_SERVER['REQUEST_URI'] = '/') :?>
+            <?php if($_SERVER['REQUEST_URI'] === "/") :?>
+
             <span class="hidden sm:block">
               <a href="addproduct" type="button"
                  class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -19,7 +20,7 @@
                 ADD
               </a>
             </span>
-            <?php elseif (urlIs('/addproduct')): ?>
+            <?php else : ?>
             <span class="hidden sm:block">
               <button type="submit" form="product_form"
                  class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -33,7 +34,7 @@
                  Save
               </button>
             </span>
-            <?php endif?>
+            <?php endif ?>
             <?php if ($_SERVER['REQUEST_URI'] === '/' ): ?>
             <span class="ml-3 hidden sm:block">
               <button type="submit" form="deleteProduct" name="deleteProduct"
@@ -48,7 +49,7 @@
 
               </button>
             </span>
-            <?php elseif ($_SERVER['REQUEST_URI'] === '/add-product'): ?>
+            <?php else: ?>
                 <span class="ml-3 hidden sm:block">
               <a href="/"
                       class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
