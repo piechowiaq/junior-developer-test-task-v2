@@ -48,26 +48,26 @@ class ProductController extends Controller
         $sku = $request->getData()['sku'];
 
         if (!$sku){
-            $errors['sku'] = 'Please, submit required data';
+            $errors['sku'] = 'Please, submit required SKU';
         }
 
         $name = $request->getData()['name'];
 
         if (!$name){
-            $errors['name'] = 'Please, submit required data';
+            $errors['name'] = 'Please, submit required name';
         }
 
         $price = $request->getData()['price'];
 
         if (!$price){
-            $errors['price'] = 'Please, submit required data';
+            $errors['price'] = 'Please, submit required price';
         }
 
         $attributes = $request->getData()['attributes'];
 
         foreach ($attributes as $key => $value) {
                 if (!($value)) {
-                    $errors[$key] = 'Please, submit required data';
+                    $errors[$key] = 'Please, submit required '.$key;
                 }
         }
 

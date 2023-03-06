@@ -15,4 +15,9 @@ class DVD extends Product
     {
         return "Size: " . $this->attributes['size'] . " MB";
     }
+
+    public function rules()
+    {
+        // TODO: Implement rules() method.
+    }
 }

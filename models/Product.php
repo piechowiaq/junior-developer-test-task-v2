@@ -2,7 +2,10 @@
 
 namespace app\models;
 
-abstract class Product {
+use app\core\Model;
+
+abstract class Product extends Model
+{
 
     protected string $sku;
     protected string $name;

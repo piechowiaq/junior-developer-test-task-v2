@@ -17,4 +17,8 @@ class Furniture extends Product
         return "Dimension: " . $this->attributes['height'] . "x" . $this->attributes['width'] . "x" . $this->attributes['length'];
     }
 
+    public function rules()
+    {
+        // TODO: Implement rules() method.
+    }
 }

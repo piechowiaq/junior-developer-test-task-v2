@@ -11,8 +11,18 @@ class Book extends Product
         $this->attributes = $attributes;
     }
 
-    public function getAttributes()
+    public function getAttributes(): string
     {
         return "Weight: " . $this->attributes['weight'] . " KG";
+    }
+
+    public function rules(): array
+    {
+        return [
+          'name' => [self::RULE_REQUIRED],
+          'sku' => [self::RULE_REQUIRED, self::RULE_UNIQUE],
+          'price' => [self::RULE_REQUIRED, self::RULE_INT],
+          'size' => [self::RULE_REQUIRED, self::RULE_INT]
+        ];
     }
 }
