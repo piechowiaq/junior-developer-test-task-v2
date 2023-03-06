@@ -31,8 +31,6 @@ class ProductController extends Controller
     {
         $productType = $request->getData()['type'];
 
-
-
         $registry = [
             'furniture' => Furniture::class,
             'dvd' => DVD::class,
@@ -45,16 +43,38 @@ class ProductController extends Controller
 
         $productClass = $registry[$productType];
 
+        $errors = [];
+
         $sku = $request->getData()['sku'];
+
+        if (!$sku){
+            $errors['sku'] = 'Please, submit required data';
+        }
+
         $name = $request->getData()['name'];
+
+        if (!$name){
+            $errors['name'] = 'Please, submit required data';
+        }
+
         $price = $request->getData()['price'];
+
+        if (!$price){
+            $errors['price'] = 'Please, submit required data';
+        }
+
         $attributes = $request->getData()['attributes'];
 
+        foreach ($attributes as $key => $value) {
+                if (!($value)) {
+                    $errors[$key] = 'Please, submit required data';
+                }
+        }
 
         $product = new $productClass($sku, $name, $price,  $attributes);
 
         echo "<pre>";
-        var_dump($product);
+        var_dump($errors);
         echo "</pre>";
         die();
 
