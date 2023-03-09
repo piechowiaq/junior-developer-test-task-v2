@@ -11,12 +11,13 @@ abstract class Product
     protected string $sku;
     protected string $name;
     protected string $price;
+    protected array $attributes;
 
-
-    public function __construct($sku, $name, $price) {
+    public function __construct($sku, $name, $price, $attributes) {
         $this->sku = $sku;
         $this->name = $name;
         $this->price = $price;
+        $this->attributes = $attributes;
     }
 
     public function getSku(): string
@@ -36,48 +37,41 @@ abstract class Product
 
     abstract public function getAttributes();
 
-    public function rules(): array
+    public function validate(): array
     {
-        return [
-            'sku' => [self::RULE_REQUIRED],
-            'name' => [self::RULE_REQUIRED],
-            'price' => [self::RULE_REQUIRED],
-        ];
-    }
+        $errors = [];
 
-    public function validate()
-    {
-        foreach ($this->rules() as $attribute => $rules){
-            $value = $this->{$attribute};
-            foreach ($rules as $rule){
-                $ruleName = $rule;
-                if(!is_string($ruleName)){
-                    $ruleName = $rule[0];
-                }
-                if ($ruleName === self::RULE_REQUIRED && !$value) {
-                    $this->addErrorForRule($attribute, self::RULE_REQUIRED);
-                }
+        if (!$this->sku){
+            $errors['sku'] = 'Please, submit required SKU';
+        }
 
+        if (!$this->name){
+            $errors['name'] = 'Please, submit required name';
+        }
+
+        if (!$this->price){
+            $errors['price'] = 'Please, submit required price';
+        }
+
+        if (!is_numeric($this->price)){
+            $errors['price'] = 'Please, submit numeric price';
+        }
+
+        foreach ($this->attributes as $key => $value) {
+                if (!($value)) {
+                    $errors[$key] = 'Please, submit required '.$key;
+                }
+        }
+
+        foreach ($this->attributes as $key => $value) {
+            if (!is_numeric($value)) {
+                $errors[$key] = 'Please, submit numeric '.$key;
             }
         }
-        return empty($this->errors);
+
+        return $errors;
     }
 
-    private function addErrorForRule(string $attribute, string $rule, $params = [])
-    {
-        $message = $this->errorMessages()[$rule] ?? '';
 
-        foreach ($params as $key => $value) {
-            $message = str_replace("{{$key}}", $value, $message);
-        }
-        $this->errors[$attribute][] = $message;
-    }
 
-    public function errorMessages(): array
-    {
-        return [
-            self::RULE_REQUIRED => 'This field is required',
-            self::RULE_UNIQUE => 'Record with this {field} already exist',
-        ];
-    }
 }

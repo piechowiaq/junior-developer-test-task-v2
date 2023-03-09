@@ -29,6 +29,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+
         $productType = $request->getData()['type'];
 
         $registry = [
@@ -43,40 +44,31 @@ class ProductController extends Controller
 
         $productClass = $registry[$productType];
 
-        $errors = [];
-
         $sku = $request->getData()['sku'];
-
-        if (!$sku){
-            $errors['sku'] = 'Please, submit required SKU';
-        }
-
         $name = $request->getData()['name'];
-
-        if (!$name){
-            $errors['name'] = 'Please, submit required name';
-        }
-
         $price = $request->getData()['price'];
-
-        if (!$price){
-            $errors['price'] = 'Please, submit required price';
-        }
-
         $attributes = $request->getData()['attributes'];
-
-        foreach ($attributes as $key => $value) {
-                if (!($value)) {
-                    $errors[$key] = 'Please, submit required '.$key;
-                }
-        }
 
         $product = new $productClass($sku, $name, $price,  $attributes);
 
-        echo "<pre>";
-        var_dump($errors);
-        echo "</pre>";
-        die();
+        $errors = $product->validate();
+
+        if (!empty($errors)){
+
+            $heading = "Product Add";
+
+            return $this->render('create', [
+                'errors' => $errors,
+                'heading' => $heading
+                ]);
+        }
+
+
+
+//        echo "<pre>";
+//        var_dump($errors);
+//        echo "</pre>";
+//        die();
 
         echo 'Hello from store';
     }
