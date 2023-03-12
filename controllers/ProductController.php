@@ -64,13 +64,9 @@ class ProductController extends Controller
         }
 
 
+        $heading = "Product List";
 
-//        echo "<pre>";
-//        var_dump($errors);
-//        echo "</pre>";
-//        die();
-
-        echo 'Hello from store';
+        return $this->render('index', ['heading' => $heading]);
     }
 
     public function delete()
