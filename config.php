@@ -2,10 +2,8 @@
 
 return [
     'db' => [
-        'host' => 'localhost',
-        'port' => 3306,
-        'dbname' => 'scandiweb',
-        'charset' => 'utf8mb4'
+        'dsn' => 'mysql:host=localhost;port=3306;dbname=mvc_framework',
+        'user' => 'root',
+        'password' => '',
     ],
-
 ];
