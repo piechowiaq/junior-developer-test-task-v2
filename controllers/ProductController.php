@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\models\Furniture;
@@ -29,7 +28,6 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-
         $productType = $request->getData()['type'];
 
         $registry = [
@@ -49,7 +47,9 @@ class ProductController extends Controller
         $price = $request->getData()['price'];
         $attributes = $request->getData()['attributes'];
 
-        $product = new $productClass($sku, $name, $price,  $attributes);
+        $product = new $productClass($sku, $name, $price, $attributes, $productType);
+
+        assert($product instanceof Product);
 
         $errors = $product->validate();
 
@@ -63,6 +63,7 @@ class ProductController extends Controller
                 ]);
         }
 
+        $product->save();
 
         $heading = "Product List";
 
@@ -72,6 +73,6 @@ class ProductController extends Controller
     public function delete()
     {
 
-    }
+        }
 
 }

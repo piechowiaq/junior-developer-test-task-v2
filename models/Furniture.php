@@ -5,8 +5,8 @@ namespace app\models;
 class Furniture extends Product
 {
 
-    public function __construct($sku,$name, $price, $attributes) {
-        parent::__construct($sku, $name, $price, $attributes);
+    public function __construct($sku,$name, $price, $attributes, $productType) {
+        parent::__construct($sku, $name, $price, $attributes, $productType);
 
     }
 

@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\core\Application;
+
 abstract class Product
 {
     public const RULE_REQUIRED = 'required';
@@ -12,12 +14,14 @@ abstract class Product
     protected string $name;
     protected string $price;
     protected array $attributes;
+    protected string $productType;
 
-    public function __construct($sku, $name, $price, $attributes) {
+    public function __construct($sku, $name, $price, $attributes, $productType) {
         $this->sku = $sku;
         $this->name = $name;
         $this->price = $price;
         $this->attributes = $attributes;
+        $this->productType = $productType;
     }
 
     public function getSku(): string
@@ -70,6 +74,47 @@ abstract class Product
         }
 
         return $errors;
+    }
+
+    public function save()
+    {
+        $query = 'INSERT INTO products(name, SKU, price, attributes, type) VALUES (:name, :SKU, :price, :attributes, :type)';
+
+        $stmt = self::prepare($query);
+
+        $attributes = implode(', ', $this->attributes);
+
+        $stmt->bindValue(':name', $this->name);
+        $stmt->bindValue(':SKU', $this->sku);
+        $stmt->bindValue(':price', $this->price);
+        $stmt->bindParam(':attributes',$attributes);
+        $stmt->bindValue(':type', $this->productType);
+
+        $stmt->execute();
+
+        return true;
+
+    }
+
+    public function delete()
+    {
+        $delete = $_POST['products'];
+
+        foreach ($delete as $id)
+        {
+            $query = "DELETE FROM products WHERE id = '" . $id . "'";
+        }
+
+            $stmt = self::prepare($query);
+            $stmt->execute();
+
+        return true;
+
+        }
+
+    public static function prepare($query)
+    {
+        return Application::$app->db->pdo->prepare($query);
     }
 
 
