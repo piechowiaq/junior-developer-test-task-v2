@@ -24,6 +24,11 @@ abstract class Product
         $this->productType = $productType;
     }
 
+    public static function getAll() {
+
+        return Application::$app->db->getAll("SELECT * FROM products");
+    }
+
     public function getSku(): string
     {
         return $this->sku;

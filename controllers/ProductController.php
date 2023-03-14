@@ -15,7 +15,12 @@ class ProductController extends Controller
     {
         $heading = "Product List";
 
-        return $this->render('index', ['heading' => $heading]);
+        $products = Product::getAll();
+
+        return $this->render('index', [
+            'heading' => $heading,
+            'products' => $products
+        ]);
 
     }
 

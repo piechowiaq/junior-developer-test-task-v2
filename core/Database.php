@@ -16,6 +16,14 @@ class Database
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
+    public function getAll($sql)
+    {
+        $statement = self::prepare($sql);
+        $statement->execute();
+
+        return $statement->fetchObject();
+    }
+
     public function prepare($sql)
     {
         return $this->pdo->prepare($sql);
