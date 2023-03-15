@@ -16,15 +16,12 @@ class ProductController extends Controller
     {
         $heading = "Product List";
 
-        $products = (new \app\models\Product)->getAllProducts();
+//        $products = (new \app\models\Product)->getAllProducts();
 
-        echo '<pre>';
-        var_dump($products);
-        echo '</pre>';
-        exit;
+
         return $this->render('index', [
             'heading' => $heading,
-            'products' => $products
+//            'products' => $products
         ]);
 
     }
@@ -57,7 +54,8 @@ class ProductController extends Controller
         $price = $request->getData()['price'];
         $attributes = $request->getData()['attributes'];
 
-        $product = new $productClass($sku, $name, $price, $attributes, $productType);
+        $product = new $productClass($sku, $name, $price, $attributes);
+
 
         assert($product instanceof Product);
 
@@ -77,11 +75,10 @@ class ProductController extends Controller
 
         $heading = "Product Add";
 
-        $products = Product::getAll();
 
         return $this->render('index', [
             'heading' => $heading,
-            'products' => $products
+//            'products' => $products
         ]);
     }
 

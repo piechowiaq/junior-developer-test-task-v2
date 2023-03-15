@@ -5,50 +5,60 @@ namespace app\models;
 use app\core\Application;
 use \PDO;
 
-class Product
+abstract class Product
 {
     public const RULE_REQUIRED = 'required';
     public const RULE_UNIQUE = 'unique';
     public const RULE_INT = 'int';
 
+    protected int $id;
     protected string $sku;
     protected string $name;
     protected string $price;
-    protected string $attributes;
-    protected string $type;
 
-//    public function __construct($sku, $name, $price, $attributes, $productType) {
-//        $this->sku = $sku;
-//        $this->name = $name;
-//        $this->price = $price;
-//        $this->attributes = $attributes;
-//        $this->productType = $productType;
-//    }
 
-    public function loadById($id) {
-        $stmt = Application::$app->db->prepare("SELECT id, name, SKU, price, attributes, type FROM products WHERE id = :id");
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->id = $result['id'];
-        $this->name = $result['name'];
-        $this->sku = $result['SKU'];
-        $this->price = $result['price'];
-        $this->attributes = $result['attributes'];
-        $this->type = $result['type'];
+
+    public function __construct($sku, $name, $price) {
+        $this->sku = $sku;
+        $this->name = $name;
+        $this->price = $price;
+
     }
 
-    public function getAllProducts() {
-        $products = array();
+//    public function loadById($id) {
+//        $stmt = Application::$app->db->prepare("SELECT id, name, SKU, price, attributes, type FROM products WHERE id = :id");
+//        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+//        $stmt->execute();
+//        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+//        $this->id = $result['id'];
+//        $this->name = $result['name'];
+//        $this->sku = $result['SKU'];
+//        $this->price = $result['price'];
+//        $this->attributes = $result['attributes'];
+//        $this->type = $result['type'];
+//    }
 
-        $stmt = Application::$app->db->query("SELECT id FROM products");
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $product = new Product();
-            $product->loadById($row['id']);
-            $products[] = $product;
-        }
+//    public function getAllProducts() {
+//        $products = array();
+//
+//        $stmt = Application::$app->db->query("SELECT id FROM products");
+//        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//            $product = new Product();
+//            $product->loadById($row['id']);
+//            $products[] = $product;
+//        }
+//
+//        return $products;
+//    }
 
-        return $products;
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function getSku(): string
@@ -56,17 +66,42 @@ class Product
         return $this->sku;
     }
 
+    public function setSku($sku): string
+    {
+        $this->sku = $sku;
+    }
+
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function getPrice(): int
+    public function setName($name): string
+    {
+        $this->name = $name;
+    }
+
+    public function getPrice(): string
     {
         return $this->price . " $";
     }
 
-//    abstract public function getAttributes();
+    public function setPrice($price): string
+    {
+        $this->price = $price;
+    }
+
+    public function getType(): string
+    {
+        return $this->type . " $";
+    }
+
+    public function setType($type): string
+    {
+        $this->type = $type;
+    }
+
+    abstract public function getAttributes();
 
     public function validate(): array
     {
@@ -103,26 +138,28 @@ class Product
         return $errors;
     }
 
-//    public function save()
-//    {
-//        $query = 'INSERT INTO products(name, SKU, price, attributes, type) VALUES (:name, :SKU, :price, :attributes, :type)';
-//
-//        $stmt = self::prepare($query);
-//
-//        $attributes = implode(', ', $this->attributes);
-//
-//        $stmt->bindValue(':name', $this->name);
-//        $stmt->bindValue(':SKU', $this->sku);
-//        $stmt->bindValue(':price', $this->price);
-//        $stmt->bindParam(':attributes',$attributes);
-//        $stmt->bindValue(':type', $this->productType);
-//
-//        $stmt->execute();
-//
-//        return true;
-//
-//    }
-//
+    public function save()
+    {
+        $query = 'INSERT INTO products(name, SKU, price) VALUES (:name, :SKU, :price)';
+
+        $stmt = self::prepare($query);
+
+
+
+        $stmt->bindValue(':name', $this->name);
+        $stmt->bindValue(':SKU', $this->sku);
+        $stmt->bindValue(':price', $this->price);
+
+
+
+        $stmt->execute();
+
+        $this->id = Application::$app->db->lastInsertId();
+
+        return $this->id;
+    }
+
+
 //    public function delete()
 //    {
 //        $delete = $_POST['products'];
@@ -138,11 +175,11 @@ class Product
 //        return true;
 //
 //        }
-//
-//    public static function prepare($query)
-//    {
-//        return Application::$app->db->pdo->prepare($query);
-//    }
+
+    public static function prepare($query)
+    {
+        return Application::$app->db->pdo->prepare($query);
+    }
 
 
 

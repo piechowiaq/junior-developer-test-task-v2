@@ -12,13 +12,14 @@
                         <div class="w-full p-4 md:w-1/2 lg:w-1/4">
                             <div class="delete-checkbox">
                                 <label>
-                                    <input name="products[]" type="checkbox" value="<?= $product['id'] ?>">
+                                    <input name="products[]" type="checkbox" value="<?= $product->getId() ?>">
                                 </label>
                                 <div class="text-center -mt-6">
-                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><?= $product['SKU'] ?></h5>
-                                    <p class="font-normal text-gray-700 dark:text-gray-400"><?= $product['name'] ?></p>
-                                    <p class="font-normal text-gray-700 dark:text-gray-400"><?= $product['price']." "."$" ?></p>
-                                    <p class="font-normal text-gray-700 dark:text-gray-400"><?= $product['attributes']." " ?></p>
+                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><?= $product->getSku() ?></h5>
+                                    <p class="font-normal text-gray-700 dark:text-gray-400"><?= $product->getName() ?></p>
+                                    <p class="font-normal text-gray-700 dark:text-gray-400"><?= $product->getPrice() ?></p>
+                                    <p class="font-normal text-gray-700 dark:text-gray-400"><?= $product->getAttributes() ?></p>
+
                                 </div>
                             </div>
                         </div>
