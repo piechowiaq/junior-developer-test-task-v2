@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use app\models\Product;
+
 class Database
 {
     public \PDO $pdo;
@@ -21,7 +23,7 @@ class Database
         $statement = self::prepare($sql);
         $statement->execute();
 
-        return $statement->fetchObject();
+        return $statement->fetchAll();
     }
 
     public function prepare($sql)

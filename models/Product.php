@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\core\Application;
+use PDO;
 
 abstract class Product
 {
@@ -22,6 +23,19 @@ abstract class Product
         $this->price = $price;
         $this->attributes = $attributes;
         $this->productType = $productType;
+    }
+
+    public function loadById($id) {
+        $stmt = $this->db->prepare("SELECT id, name, SKU, price, attributes, type FROM products WHERE id = :id");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->id = $result['id'];
+        $this->name = $result['name'];
+        $this->sku = $result['SKU'];
+        $this->price = $result['price'];
+        $this->attributes = $result['attributes'];
+        $this->type = $result['type'];
     }
 
     public static function getAll() {

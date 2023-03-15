@@ -11,6 +11,7 @@ use app\models\Product;
 
 class ProductController extends Controller
 {
+
     public function index()
     {
         $heading = "Product List";
@@ -70,9 +71,14 @@ class ProductController extends Controller
 
         $product->save();
 
-        $heading = "Product List";
+        $heading = "Product Add";
 
-        return $this->render('index', ['heading' => $heading]);
+        $products = Product::getAll();
+
+        return $this->render('index', [
+            'heading' => $heading,
+            'products' => $products
+        ]);
     }
 
     public function delete()
