@@ -16,8 +16,12 @@ class ProductController extends Controller
     {
         $heading = "Product List";
 
-        $products = Product::getAll();
+        $products = (new \app\models\Product)->getAllProducts();
 
+        echo '<pre>';
+        var_dump($products);
+        echo '</pre>';
+        exit;
         return $this->render('index', [
             'heading' => $heading,
             'products' => $products

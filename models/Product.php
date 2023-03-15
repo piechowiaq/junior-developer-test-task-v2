@@ -3,9 +3,9 @@
 namespace app\models;
 
 use app\core\Application;
-use PDO;
+use \PDO;
 
-abstract class Product
+class Product
 {
     public const RULE_REQUIRED = 'required';
     public const RULE_UNIQUE = 'unique';
@@ -14,19 +14,19 @@ abstract class Product
     protected string $sku;
     protected string $name;
     protected string $price;
-    protected array $attributes;
-    protected string $productType;
+    protected string $attributes;
+    protected string $type;
 
-    public function __construct($sku, $name, $price, $attributes, $productType) {
-        $this->sku = $sku;
-        $this->name = $name;
-        $this->price = $price;
-        $this->attributes = $attributes;
-        $this->productType = $productType;
-    }
+//    public function __construct($sku, $name, $price, $attributes, $productType) {
+//        $this->sku = $sku;
+//        $this->name = $name;
+//        $this->price = $price;
+//        $this->attributes = $attributes;
+//        $this->productType = $productType;
+//    }
 
     public function loadById($id) {
-        $stmt = $this->db->prepare("SELECT id, name, SKU, price, attributes, type FROM products WHERE id = :id");
+        $stmt = Application::$app->db->prepare("SELECT id, name, SKU, price, attributes, type FROM products WHERE id = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -38,9 +38,17 @@ abstract class Product
         $this->type = $result['type'];
     }
 
-    public static function getAll() {
+    public function getAllProducts() {
+        $products = array();
 
-        return Application::$app->db->getAll("SELECT * FROM products");
+        $stmt = Application::$app->db->query("SELECT id FROM products");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $product = new Product();
+            $product->loadById($row['id']);
+            $products[] = $product;
+        }
+
+        return $products;
     }
 
     public function getSku(): string
@@ -58,7 +66,7 @@ abstract class Product
         return $this->price . " $";
     }
 
-    abstract public function getAttributes();
+//    abstract public function getAttributes();
 
     public function validate(): array
     {
@@ -95,46 +103,46 @@ abstract class Product
         return $errors;
     }
 
-    public function save()
-    {
-        $query = 'INSERT INTO products(name, SKU, price, attributes, type) VALUES (:name, :SKU, :price, :attributes, :type)';
-
-        $stmt = self::prepare($query);
-
-        $attributes = implode(', ', $this->attributes);
-
-        $stmt->bindValue(':name', $this->name);
-        $stmt->bindValue(':SKU', $this->sku);
-        $stmt->bindValue(':price', $this->price);
-        $stmt->bindParam(':attributes',$attributes);
-        $stmt->bindValue(':type', $this->productType);
-
-        $stmt->execute();
-
-        return true;
-
-    }
-
-    public function delete()
-    {
-        $delete = $_POST['products'];
-
-        foreach ($delete as $id)
-        {
-            $query = "DELETE FROM products WHERE id = '" . $id . "'";
-        }
-
-            $stmt = self::prepare($query);
-            $stmt->execute();
-
-        return true;
-
-        }
-
-    public static function prepare($query)
-    {
-        return Application::$app->db->pdo->prepare($query);
-    }
+//    public function save()
+//    {
+//        $query = 'INSERT INTO products(name, SKU, price, attributes, type) VALUES (:name, :SKU, :price, :attributes, :type)';
+//
+//        $stmt = self::prepare($query);
+//
+//        $attributes = implode(', ', $this->attributes);
+//
+//        $stmt->bindValue(':name', $this->name);
+//        $stmt->bindValue(':SKU', $this->sku);
+//        $stmt->bindValue(':price', $this->price);
+//        $stmt->bindParam(':attributes',$attributes);
+//        $stmt->bindValue(':type', $this->productType);
+//
+//        $stmt->execute();
+//
+//        return true;
+//
+//    }
+//
+//    public function delete()
+//    {
+//        $delete = $_POST['products'];
+//
+//        foreach ($delete as $id)
+//        {
+//            $query = "DELETE FROM products WHERE id = '" . $id . "'";
+//        }
+//
+//            $stmt = self::prepare($query);
+//            $stmt->execute();
+//
+//        return true;
+//
+//        }
+//
+//    public static function prepare($query)
+//    {
+//        return Application::$app->db->pdo->prepare($query);
+//    }
 
 
 
