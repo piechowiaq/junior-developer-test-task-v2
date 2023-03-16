@@ -5,24 +5,26 @@ namespace app\models;
 use app\core\Application;
 use \PDO;
 
-abstract class Product
+class Product
 {
-    public const RULE_REQUIRED = 'required';
-    public const RULE_UNIQUE = 'unique';
-    public const RULE_INT = 'int';
-
     protected int $id;
     protected string $sku;
     protected string $name;
     protected string $price;
 
-
-
     public function __construct($sku, $name, $price) {
         $this->sku = $sku;
         $this->name = $name;
         $this->price = $price;
+    }
 
+    public static function getAllProducts()
+    {
+        return Application::$app->db->query("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
+                FROM products p
+                LEFT JOIN books b ON p.id = b.id
+                LEFT JOIN dvds d ON p.id = d.id
+                LEFT JOIN furnitures f ON p.id = f.id;");
     }
 
 //    public function loadById($id) {
@@ -36,19 +38,6 @@ abstract class Product
 //        $this->price = $result['price'];
 //        $this->attributes = $result['attributes'];
 //        $this->type = $result['type'];
-//    }
-
-//    public function getAllProducts() {
-//        $products = array();
-//
-//        $stmt = Application::$app->db->query("SELECT id FROM products");
-//        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//            $product = new Product();
-//            $product->loadById($row['id']);
-//            $products[] = $product;
-//        }
-//
-//        return $products;
 //    }
 
     public function getId(): string
@@ -100,8 +89,6 @@ abstract class Product
     {
         $this->type = $type;
     }
-
-    abstract public function getAttributes();
 
     public function validate(): array
     {

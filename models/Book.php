@@ -31,14 +31,7 @@ class Book extends Product
         $stmt = self::prepare($query);
 
         $stmt->bindValue(':id', $this->getId());
-
-//        echo '<pre>';
-//        var_dump();
-//        echo '</pre>';
-//        exit;
-
         $stmt->bindValue(':weight',$this->attributes['weight']);
-
         $stmt->execute();
 
         return true;

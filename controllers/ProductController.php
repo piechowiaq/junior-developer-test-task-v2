@@ -16,12 +16,12 @@ class ProductController extends Controller
     {
         $heading = "Product List";
 
-//        $products = (new \app\models\Product)->getAllProducts();
+        $products = Product::getAllProducts();
 
 
         return $this->render('index', [
             'heading' => $heading,
-//            'products' => $products
+            'products' => $products
         ]);
 
     }
