@@ -20,11 +20,14 @@ class Product
 
     public static function getAllProducts()
     {
-        return Application::$app->db->query("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
+        $db = Application::$app->db;
+        $statement = $db->prepare("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
                 FROM products p
                 LEFT JOIN books b ON p.id = b.id
                 LEFT JOIN dvds d ON p.id = d.id
                 LEFT JOIN furnitures f ON p.id = f.id;");
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
 //    public function loadById($id) {
