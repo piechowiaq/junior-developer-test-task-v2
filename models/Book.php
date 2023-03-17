@@ -2,12 +2,14 @@
 
 namespace app\models;
 
+use app\core\Application;
+
 class Book extends Product
 {
     protected $attributes;
 
-    public function __construct($sku, $name, $price, $attributes) {
-        parent::__construct($sku, $name, $price);
+    public function __construct($id, $sku, $name, $price, $attributes) {
+        parent::__construct($id, $sku, $name, $price);
         $this->attributes = $attributes;
 
     }
@@ -30,7 +32,7 @@ class Book extends Product
 
         $stmt = self::prepare($query);
 
-        $stmt->bindValue(':id', $this->getId());
+        $stmt->bindValue(':id',$this->getId());
         $stmt->bindValue(':weight',$this->attributes['weight']);
         $stmt->execute();
 

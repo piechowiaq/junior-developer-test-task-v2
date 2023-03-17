@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\models\Furniture;
@@ -55,12 +56,13 @@ class ProductController extends Controller
 
         $productClass = $registry[$productType];
 
+        $id = Application::$app->db->lastInsertId();
         $sku = $request->getData()['sku'];
         $name = $request->getData()['name'];
         $price = $request->getData()['price'];
         $attributes = $request->getData()['attributes'];
 
-        $product = new $productClass($sku, $name, $price, $attributes);
+        $product = new $productClass(null, $sku, $name, $price, $attributes);
 
 
         assert($product instanceof Product);
@@ -80,11 +82,12 @@ class ProductController extends Controller
         $product->save();
 
         $heading = "Product Add";
+        $products = Product::getAllProducts();
 
 
         return $this->render('index', [
             'heading' => $heading,
-//            'products' => $products
+            'products' => $products
         ]);
     }
 

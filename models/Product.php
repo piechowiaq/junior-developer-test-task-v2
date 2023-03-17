@@ -19,46 +19,56 @@ class Product
         $this->price = $price;
     }
 
-//    public static function getAllProducts()
-//    {
-//        $db = Application::$app->db;
-//        $statement = $db->prepare("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
-//                FROM products p
-//                LEFT JOIN books b ON p.id = b.id
-//                LEFT JOIN dvds d ON p.id = d.id
-//                LEFT JOIN furnitures f ON p.id = f.id;");
-//        $statement->execute();
-//        return $statement->fetchAll(PDO::FETCH_ASSOC);
-//    }
-
-    public static function getAllProducts(): array
-    {
+    public static function getAllProducts() {
         $db = Application::$app->db;
-        $statement = $db->query("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
-                                FROM products p
-                                LEFT JOIN books b ON p.id = b.id
-                                LEFT JOIN dvds d ON p.id = d.id
-                                LEFT JOIN furnitures f ON p.id = f.id;");
-        $rows =  $statement->fetchAll();
+        $query = "SELECT p.id, p.sku, p.name, p.price, 
+                    b.weight AS book_weight, 
+                    d.size AS dvd_size, 
+                    f.length AS furniture_length, f.width AS furniture_width, f.height AS furniture_height
+                  FROM products p
+                  LEFT JOIN books b ON p.id = b.id
+                  LEFT JOIN dvds d ON p.id = d.id
+                  LEFT JOIN furnitures f ON p.id = f.id";
 
-        return array_map(function($row) {
-            $product = new Product($row['id'], $row['sku'], $row['name'], $row['price']);
-            $attributes = array_filter([
-                'weight' => $row['weight'],
-                'size' => $row['size'],
-                'length' => $row['length'],
-                'width' => $row['width'],
-                'height' => $row['height']
-            ]);
-            $product->setAttributes($attributes);
-            return $product;
-        }, $rows);
-    }
+        $stmt = $db->prepare($query);
+        $stmt->execute();
 
-    public function setAttributes($attributes) {
-        array_walk($attributes, function($value, $key) {
-            $this->$key = $value;
-        });
+        $products = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+            $name = $row['name'];
+            $sku = $row['sku'];
+            $price = $row['price'];
+            $product_type = '';
+
+            if ($row['book_weight'] !== null) {
+                $product_type = 'Book';
+                $weight = $row['book_weight'];
+                $attributes = array('weight' => $weight);
+                $product = new Book($id, $sku, $name, $price, $attributes);
+            } elseif ($row['dvd_size'] !== null) {
+                $product_type = 'DVD';
+                $size = $row['dvd_size'];
+                $attributes = array('size' => $size);
+                $product = new DVD($id, $sku, $name, $price, $attributes);
+            } elseif ($row['furniture_length'] !== null) {
+                $product_type = 'Furniture';
+                $length = $row['furniture_length'];
+                $width = $row['furniture_width'];
+                $height = $row['furniture_height'];
+                $attributes = array( 'length' => $length, 'width' => $width,  'height' => $height );
+                $product = new Furniture($id, $sku, $name, $price, $attributes);
+            }
+
+            if (!empty($product_type)) {
+                $product->product_type = $product_type;
+                $products[] = $product;
+            }
+        }
+
+
+
+        return $products;
     }
 
     public function getId(){
@@ -76,95 +86,6 @@ class Product
     public function getSku() {
         return $this->sku;
     }
-
-//    public function getAttributes() {
-//        echo '<pre>';
-//        var_dump(get_object_vars($this));
-//        echo '</pre>';
-//        exit;
-//
-//    }
-
-    public function getAttributes(): string
-    {
-        $attributes = [];
-        if (isset($this->weight)) {
-            $attributes[] = "Weight: " . $this->weight . " lbs";
-        }
-        if (isset($this->size)) {
-            $attributes[] = "Size: " . $this->size . " MB";
-        }
-        if (isset($this->length) && isset($this->width) && isset($this->height)) {
-            $attributes[] = "Dimensions: " . $this->length . "x" . $this->width . "x" . $this->height . " in";
-        }
-        return implode(", ", $attributes);
-    }
-
-
-
-
-//    public function loadById($id) {
-//        $stmt = Application::$app->db->prepare("SELECT id, name, SKU, price, attributes, type FROM products WHERE id = :id");
-//        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-//        $stmt->execute();
-//        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-//        $this->id = $result['id'];
-//        $this->name = $result['name'];
-//        $this->sku = $result['SKU'];
-//        $this->price = $result['price'];
-//        $this->attributes = $result['attributes'];
-//        $this->type = $result['type'];
-//    }
-
-//    public function getId(): string
-//    {
-//        return $this->id;
-//    }
-//
-//    public function setId($id)
-//    {
-//        $this->id = $id;
-//    }
-//
-//    public function getSku(): string
-//    {
-//        return $this->sku;
-//    }
-//
-//    public function setSku($sku): string
-//    {
-//        $this->sku = $sku;
-//    }
-//
-//    public function getName(): string
-//    {
-//        return $this->name;
-//    }
-//
-//    public function setName($name): string
-//    {
-//        $this->name = $name;
-//    }
-//
-//    public function getPrice(): string
-//    {
-//        return $this->price . " $";
-//    }
-//
-//    public function setPrice($price): string
-//    {
-//        $this->price = $price;
-//    }
-//
-//    public function getType(): string
-//    {
-//        return $this->type . " $";
-//    }
-//
-//    public function setType($type): string
-//    {
-//        $this->type = $type;
-//    }
 
     public function validate(): array
     {
@@ -207,13 +128,9 @@ class Product
 
         $stmt = self::prepare($query);
 
-
-
         $stmt->bindValue(':name', $this->name);
         $stmt->bindValue(':SKU', $this->sku);
         $stmt->bindValue(':price', $this->price);
-
-
 
         $stmt->execute();
 

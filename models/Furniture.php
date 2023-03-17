@@ -2,12 +2,14 @@
 
 namespace app\models;
 
+use app\core\Application;
+
 class Furniture extends Product
 {
     protected $attributes;
 
-    public function __construct($sku, $name, $price, $attributes) {
-        parent::__construct($sku, $name, $price);
+    public function __construct($id, $sku, $name, $price, $attributes) {
+        parent::__construct($id, $sku, $name, $price);
         $this->attributes = $attributes;
 
     }
