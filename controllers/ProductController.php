@@ -18,11 +18,11 @@ class ProductController extends Controller
 
         $products = Product::getAllProducts();
 
-        echo '<pre>';
-        var_dump($products);
-        echo '</pre>';
-
-        exit;
+//        echo '<pre>';
+//        var_dump($products);
+//        echo '</pre>';
+//
+//        exit;
 
 
         return $this->render('index', [

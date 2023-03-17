@@ -7,28 +7,101 @@ use \PDO;
 
 class Product
 {
-    protected int $id;
+    protected ?int $id;
     protected string $sku;
     protected string $name;
     protected string $price;
 
-    public function __construct($sku, $name, $price) {
+    public function __construct($id, $sku, $name, $price) {
+        $this->id = $id;
         $this->sku = $sku;
         $this->name = $name;
         $this->price = $price;
     }
 
-    public static function getAllProducts()
+//    public static function getAllProducts()
+//    {
+//        $db = Application::$app->db;
+//        $statement = $db->prepare("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
+//                FROM products p
+//                LEFT JOIN books b ON p.id = b.id
+//                LEFT JOIN dvds d ON p.id = d.id
+//                LEFT JOIN furnitures f ON p.id = f.id;");
+//        $statement->execute();
+//        return $statement->fetchAll(PDO::FETCH_ASSOC);
+//    }
+
+    public static function getAllProducts(): array
     {
         $db = Application::$app->db;
-        $statement = $db->prepare("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
-                FROM products p
-                LEFT JOIN books b ON p.id = b.id
-                LEFT JOIN dvds d ON p.id = d.id
-                LEFT JOIN furnitures f ON p.id = f.id;");
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $statement = $db->query("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
+                                FROM products p
+                                LEFT JOIN books b ON p.id = b.id
+                                LEFT JOIN dvds d ON p.id = d.id
+                                LEFT JOIN furnitures f ON p.id = f.id;");
+        $rows =  $statement->fetchAll();
+
+        return array_map(function($row) {
+            $product = new Product($row['id'], $row['sku'], $row['name'], $row['price']);
+            $attributes = array_filter([
+                'weight' => $row['weight'],
+                'size' => $row['size'],
+                'length' => $row['length'],
+                'width' => $row['width'],
+                'height' => $row['height']
+            ]);
+            $product->setAttributes($attributes);
+            return $product;
+        }, $rows);
     }
+
+    public function setAttributes($attributes) {
+        array_walk($attributes, function($value, $key) {
+            $this->$key = $value;
+        });
+    }
+
+    public function getId(){
+        return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getPrice() {
+        return $this->price;
+    }
+
+    public function getSku() {
+        return $this->sku;
+    }
+
+//    public function getAttributes() {
+//        echo '<pre>';
+//        var_dump(get_object_vars($this));
+//        echo '</pre>';
+//        exit;
+//
+//    }
+
+    public function getAttributes(): string
+    {
+        $attributes = [];
+        if (isset($this->weight)) {
+            $attributes[] = "Weight: " . $this->weight . " lbs";
+        }
+        if (isset($this->size)) {
+            $attributes[] = "Size: " . $this->size . " MB";
+        }
+        if (isset($this->length) && isset($this->width) && isset($this->height)) {
+            $attributes[] = "Dimensions: " . $this->length . "x" . $this->width . "x" . $this->height . " in";
+        }
+        return implode(", ", $attributes);
+    }
+
+
+
 
 //    public function loadById($id) {
 //        $stmt = Application::$app->db->prepare("SELECT id, name, SKU, price, attributes, type FROM products WHERE id = :id");
@@ -43,55 +116,55 @@ class Product
 //        $this->type = $result['type'];
 //    }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getSku(): string
-    {
-        return $this->sku;
-    }
-
-    public function setSku($sku): string
-    {
-        $this->sku = $sku;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName($name): string
-    {
-        $this->name = $name;
-    }
-
-    public function getPrice(): string
-    {
-        return $this->price . " $";
-    }
-
-    public function setPrice($price): string
-    {
-        $this->price = $price;
-    }
-
-    public function getType(): string
-    {
-        return $this->type . " $";
-    }
-
-    public function setType($type): string
-    {
-        $this->type = $type;
-    }
+//    public function getId(): string
+//    {
+//        return $this->id;
+//    }
+//
+//    public function setId($id)
+//    {
+//        $this->id = $id;
+//    }
+//
+//    public function getSku(): string
+//    {
+//        return $this->sku;
+//    }
+//
+//    public function setSku($sku): string
+//    {
+//        $this->sku = $sku;
+//    }
+//
+//    public function getName(): string
+//    {
+//        return $this->name;
+//    }
+//
+//    public function setName($name): string
+//    {
+//        $this->name = $name;
+//    }
+//
+//    public function getPrice(): string
+//    {
+//        return $this->price . " $";
+//    }
+//
+//    public function setPrice($price): string
+//    {
+//        $this->price = $price;
+//    }
+//
+//    public function getType(): string
+//    {
+//        return $this->type . " $";
+//    }
+//
+//    public function setType($type): string
+//    {
+//        $this->type = $type;
+//    }
 
     public function validate(): array
     {
