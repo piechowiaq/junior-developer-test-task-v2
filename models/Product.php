@@ -12,23 +12,63 @@ class Product
     protected string $name;
     protected string $price;
 
-    public function __construct($sku, $name, $price) {
+    public function __construct($id, $sku, $name, $price) {
+        $this->id = $id;
         $this->sku = $sku;
         $this->name = $name;
         $this->price = $price;
     }
 
-    public static function getAllProducts()
-    {
+    public static function getAllProducts() {
         $db = Application::$app->db;
-        $statement = $db->prepare("SELECT p.id, p.name, p.sku, p.price, b.weight, d.size, f.height, f.width, f.length
-                FROM products p
-                LEFT JOIN books b ON p.id = b.id
-                LEFT JOIN dvds d ON p.id = d.id
-                LEFT JOIN furnitures f ON p.id = f.id;");
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $query = "SELECT p.id, p.sku, p.name, p.price, 
+                    b.weight AS book_weight, 
+                    d.size AS dvd_size, 
+                    f.length AS furniture_length, f.width AS furniture_width, f.height AS furniture_height
+                  FROM products p
+                  LEFT JOIN books b ON p.id = b.id
+                  LEFT JOIN dvds d ON p.id = d.id
+                  LEFT JOIN furnitures f ON p.id = f.id";
+
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+
+        $products = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+            $name = $row['name'];
+            $sku = $row['sku'];
+            $price = $row['price'];
+            $product_type = '';
+
+            if ($row['book_weight'] !== null) {
+                $product_type = 'Book';
+                $weight = $row['book_weight'];
+                $attributes = array('weight' => $weight);
+                $product = new Book($id, $sku, $name, $price, $attributes);
+            } elseif ($row['dvd_size'] !== null) {
+                $product_type = 'DVD';
+                $size = $row['dvd_size'];
+                $attributes = array('size' => $size);
+                $product = new DVD($id, $sku, $name, $price, $attributes);
+            } elseif ($row['furniture_length'] !== null) {
+                $product_type = 'Furniture';
+                $length = $row['furniture_length'];
+                $width = $row['furniture_width'];
+                $height = $row['furniture_height'];
+                $attributes = array( 'length' => $length, 'width' => $width,  'height' => $height );
+                $product = new Furniture($id, $sku, $name, $price, $attributes);
+            }
+
+            if (!empty($product_type)) {
+                $product->product_type = $product_type;
+                $products[] = $product;
+            }
+        }
+
+        return $products;
     }
+
 
 //    public function loadById($id) {
 //        $stmt = Application::$app->db->prepare("SELECT id, name, SKU, price, attributes, type FROM products WHERE id = :id");
