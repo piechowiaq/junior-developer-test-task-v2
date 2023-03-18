@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
+use app\core\Response;
 use app\models\Furniture;
 use app\models\DVD;
 use app\models\Book;
@@ -16,15 +17,7 @@ class ProductController extends Controller
     public function index()
     {
         $heading = "Product List";
-
         $products = Product::getAllProducts();
-
-//        echo '<pre>';
-//        var_dump($products);
-//        echo '</pre>';
-//
-//        exit;
-
 
         return $this->render('index', [
             'heading' => $heading,
@@ -51,19 +44,19 @@ class ProductController extends Controller
         ];
 
         if (!array_key_exists($productType, $registry)) {
-            echo 'Invalid product type';
+            $heading = "Product Add";
+
+            return $this->render('create', ['heading' => $heading]);
         }
 
         $productClass = $registry[$productType];
 
-        $id = Application::$app->db->lastInsertId();
         $sku = $request->getData()['sku'];
         $name = $request->getData()['name'];
         $price = $request->getData()['price'];
         $attributes = $request->getData()['attributes'];
 
         $product = new $productClass(null, $sku, $name, $price, $attributes);
-
 
         assert($product instanceof Product);
 
@@ -84,16 +77,23 @@ class ProductController extends Controller
         $heading = "Product Add";
         $products = Product::getAllProducts();
 
-
         return $this->render('index', [
             'heading' => $heading,
             'products' => $products
         ]);
     }
 
-    public function delete()
+    public function delete(Request $request)
     {
+        Product::delete($_POST['products']);
 
-        }
+        $heading = "Product Add";
+        $products = Product::getAllProducts();
+
+        return $this->render('index', [
+            'heading' => $heading,
+            'products' => $products
+        ]);
+    }
 
 }

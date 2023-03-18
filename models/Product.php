@@ -124,12 +124,12 @@ class Product
 
     public function save()
     {
-        $query = 'INSERT INTO products(name, SKU, price) VALUES (:name, :SKU, :price)';
+        $query = 'INSERT INTO products(name, sku, price) VALUES (:name, :sku, :price)';
 
         $stmt = self::prepare($query);
 
         $stmt->bindValue(':name', $this->name);
-        $stmt->bindValue(':SKU', $this->sku);
+        $stmt->bindValue(':sku', $this->sku);
         $stmt->bindValue(':price', $this->price);
 
         $stmt->execute();
@@ -140,21 +140,21 @@ class Product
     }
 
 
-//    public function delete()
-//    {
-//        $delete = $_POST['products'];
-//
-//        foreach ($delete as $id)
-//        {
-//            $query = "DELETE FROM products WHERE id = '" . $id . "'";
-//        }
-//
-//            $stmt = self::prepare($query);
-//            $stmt->execute();
-//
-//        return true;
-//
-//        }
+    public static function delete($ids)
+    {
+
+
+        foreach ($ids as $id)
+        {
+            $query = "DELETE FROM products WHERE id = '" . $id . "'";
+        }
+
+            $stmt = self::prepare($query);
+            $stmt->execute();
+
+        return true;
+
+        }
 
     public static function prepare($query)
     {
