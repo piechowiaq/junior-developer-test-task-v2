@@ -8,8 +8,8 @@ class DVD extends Product
 {
     protected $attributes;
 
-    public function __construct($id, $sku, $name, $price, $attributes) {
-        parent::__construct($id, $sku, $name, $price);
+    public function __construct($id, $sku, $name, $price, $type, $attributes) {
+        parent::__construct($id, $sku, $name, $price, $type);
         $this->attributes = $attributes;
 
     }

@@ -30,7 +30,6 @@ class Router
         return "Delete";
     }
 
-
     public function resolve()
     {
         $path = $this->request->getPath();

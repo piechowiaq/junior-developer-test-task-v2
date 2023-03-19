@@ -45,17 +45,7 @@ class ProductController extends Controller
 
         if (!array_key_exists($productType, $registry)) {
 
-            $errors['type'] = 'Please, select product type.';
-
-            if (!empty($errors)){
-
-                $heading = "Product Add";
-
-                return $this->render('create', [
-                    'errors' => $errors,
-                    'heading' => $heading
-                ]);
-            }
+            return $errors['type'] = 'Please, select product type.';
         }
 
         $productClass = $registry[$productType];
@@ -63,9 +53,10 @@ class ProductController extends Controller
         $sku = $request->getData()['sku'];
         $name = $request->getData()['name'];
         $price = $request->getData()['price'];
+        $type = $request->getData()['type'];
         $attributes = $request->getData()['attributes'];
 
-        $product = new $productClass(null, $sku, $name, $price, $attributes);
+        $product = new $productClass(null, $sku, $name, $price, $type, $attributes);
 
         assert($product instanceof Product);
 

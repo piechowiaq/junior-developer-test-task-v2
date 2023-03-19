@@ -11,12 +11,14 @@ class Product
     protected string $sku;
     protected string $name;
     protected string $price;
+    protected string $type;
 
-    public function __construct($id, $sku, $name, $price) {
+    public function __construct($id, $sku, $name, $price, $type) {
         $this->id = $id;
         $this->sku = $sku;
         $this->name = $name;
         $this->price = $price;
+        $this->type = $type;
     }
 
     public static function getAllProducts() {
@@ -45,19 +47,19 @@ class Product
                 $product_type = 'Book';
                 $weight = $row['book_weight'];
                 $attributes = array('weight' => $weight);
-                $product = new Book($id, $sku, $name, $price, $attributes);
+                $product = new Book($id, $sku, $name, $price, 'book', $attributes);
             } elseif ($row['dvd_size'] !== null) {
                 $product_type = 'DVD';
                 $size = $row['dvd_size'];
                 $attributes = array('size' => $size);
-                $product = new DVD($id, $sku, $name, $price, $attributes);
-            } elseif ($row['furniture_length'] !== null) {
+                $product = new DVD($id, $sku, $name, $price, 'dvd', $attributes);
+            } elseif ($row['furniture_length'] !== null)
                 $product_type = 'Furniture';
                 $length = $row['furniture_length'];
                 $width = $row['furniture_width'];
                 $height = $row['furniture_height'];
                 $attributes = array( 'length' => $length, 'width' => $width,  'height' => $height );
-                $product = new Furniture($id, $sku, $name, $price, $attributes);
+                $product = new Furniture($id, $sku, $name, $price, 'furniture', $attributes);
             }
 
             if (!empty($product_type)) {
@@ -92,30 +94,34 @@ class Product
         $errors = [];
 
         if (!$this->sku){
-            $errors['sku'] = 'Please, submit required SKU';
+            $errors['sku'] = 'Please, submit required SKU.';
         }
 
         if (!$this->name){
-            $errors['name'] = 'Please, submit required name';
+            $errors['name'] = 'Please, submit required name.';
         }
 
         if (!$this->price){
-            $errors['price'] = 'Please, submit required price';
+            $errors['price'] = 'Please, submit required price.';
+        }
+
+        if (!$this->type){
+            $errors['type'] = 'Please, select required type.';
         }
 
         if (!is_numeric($this->price)){
-            $errors['price'] = 'Please, submit numeric price';
+            $errors['price'] = 'Please, submit numeric price.';
         }
 
         foreach ($this->attributes as $key => $value) {
                 if (!($value)) {
-                    $errors[$key] = 'Please, submit required '.$key;
+                    $errors[$key] = 'Please, submit required '.$key.'.';
                 }
         }
 
         foreach ($this->attributes as $key => $value) {
             if (!is_numeric($value)) {
-                $errors[$key] = 'Please, submit numeric '.$key;
+                $errors[$key] = 'Please, submit numeric '.$key.'.';
             }
         }
 
