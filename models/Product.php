@@ -53,7 +53,7 @@ class Product
                 $size = $row['dvd_size'];
                 $attributes = array('size' => $size);
                 $product = new DVD($id, $sku, $name, $price, 'dvd', $attributes);
-            } elseif ($row['furniture_length'] !== null)
+            } elseif ($row['furniture_length'] !== null) {
                 $product_type = 'Furniture';
                 $length = $row['furniture_length'];
                 $width = $row['furniture_width'];
