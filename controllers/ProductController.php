@@ -44,9 +44,18 @@ class ProductController extends Controller
         ];
 
         if (!array_key_exists($productType, $registry)) {
-            $heading = "Product Add";
 
-            return $this->render('create', ['heading' => $heading]);
+            $errors['type'] = 'Please, select product type.';
+
+            if (!empty($errors)){
+
+                $heading = "Product Add";
+
+                return $this->render('create', [
+                    'errors' => $errors,
+                    'heading' => $heading
+                ]);
+            }
         }
 
         $productClass = $registry[$productType];
