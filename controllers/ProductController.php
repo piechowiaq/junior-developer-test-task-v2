@@ -45,7 +45,11 @@ class ProductController extends Controller
 
         if (!array_key_exists($productType, $registry)) {
 
-            return $errors['type'] = 'Please, select product type.';
+            $errors['type'] = 'Please, select product type.';
+            $_SESSION['errors'] = ['All fields are required'];
+
+            header("Location: addproduct?errors=type");
+            exit;
         }
 
         $productClass = $registry[$productType];
@@ -66,10 +70,7 @@ class ProductController extends Controller
 
             $heading = "Product Add";
 
-            return $this->render('create', [
-                'errors' => $errors,
-                'heading' => $heading
-                ]);
+            header("Location: create.php?errors=$errors;heading=$heading");
         }
 
         $product->save();
