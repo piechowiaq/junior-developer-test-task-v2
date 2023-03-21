@@ -47,12 +47,13 @@ class ProductController extends Controller
         if (!array_key_exists($productType, $registry)) {
 
             $errors['type'] = 'Please select the right product.';
+            $heading = "Product Add";
 
-            $errors_json = json_encode($errors);
+            return $this->render('index', [
+                'heading' => $heading,
+                'products' => $errors
+            ]);
 
-            header('Location: addproduct?errors=' . urlencode($errors_json));
-
-            exit;
         }
 
         $productClass = $registry[$productType];

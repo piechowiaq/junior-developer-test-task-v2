@@ -1,12 +1,6 @@
 <?php require('partials/head.php') ?>
 <?php require('partials/nav.php') ?>
-<?php
 
-    if (isset($_GET['errors']))
-    {
-        $errors = json_decode($_GET['errors'], true);
-    }
-?>
 
 <main>
 
