@@ -1,6 +1,12 @@
 <?php require('partials/head.php') ?>
 <?php require('partials/nav.php') ?>
+<?php
 
+    if (isset($_GET['errors']))
+    {
+        $errors = json_decode($_GET['errors'], true);
+    }
+?>
 
 <main>
 
@@ -18,6 +24,7 @@
                     <div>
                         <label for="name" class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                         <input type="text" name="name" id="name" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <div class="text-sm text-red-500 m-2"><?= $errors['name'] ?? '' ?></div>
                     </div>
                     <div>
                         <label for="price" class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>

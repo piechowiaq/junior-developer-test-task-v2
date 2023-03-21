@@ -43,12 +43,15 @@ class ProductController extends Controller
             'book' => Book::class,
         ];
 
+        $errors = array();
         if (!array_key_exists($productType, $registry)) {
 
-            $errors['type'] = 'Please, select product type.';
-            $_SESSION['errors'] = ['All fields are required'];
+            $errors['type'] = 'Please select the right product.';
 
-            header("Location: addproduct?errors=type");
+            $errors_json = json_encode($errors);
+
+            header('Location: addproduct?errors=' . urlencode($errors_json));
+
             exit;
         }
 
@@ -68,9 +71,11 @@ class ProductController extends Controller
 
         if (!empty($errors)){
 
-            $heading = "Product Add";
+            $errors_json = json_encode($errors);
 
-            header("Location: create.php?errors=$errors;heading=$heading");
+            header('Location: addproduct?errors=' . urlencode($errors_json));
+
+            exit;
         }
 
         $product->save();
