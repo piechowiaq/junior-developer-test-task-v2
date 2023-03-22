@@ -49,9 +49,9 @@ class ProductController extends Controller
             $errors['type'] = 'Please select the right product.';
             $heading = "Product Add";
 
-            return $this->render('index', [
+            return $this->render('create', [
                 'heading' => $heading,
-                'products' => $errors
+                'errors' => $errors
             ]);
 
         }
@@ -72,11 +72,12 @@ class ProductController extends Controller
 
         if (!empty($errors)){
 
-            $errors_json = json_encode($errors);
+            $heading = "Product Add";
 
-            header('Location: addproduct?errors=' . urlencode($errors_json));
-
-            exit;
+            return $this->render('create', [
+                'heading' => $heading,
+                'errors' => $errors
+            ]);
         }
 
         $product->save();
