@@ -8,12 +8,6 @@ class Furniture extends Product
 {
     protected $attributes;
 
-    public function __construct($id, $sku, $name, $price, $type, $attributes) {
-        parent::__construct($id, $sku, $name, $price, $type);
-        $this->attributes = $attributes;
-
-    }
-
     public function getAttributes(): string
     {
         return "Dimension: " . $this->attributes['height'] . "x" . $this->attributes['width'] . "x" . $this->attributes['length'];
@@ -22,6 +16,30 @@ class Furniture extends Product
     public function setAttributes($attributes): string
     {
         $this->attributes = $attributes;
+    }
+
+    public function validate(): array
+    {
+        $errors = parent::validate();
+
+        if(!is_null($this->attributes)) {
+
+            foreach ($this->attributes as $key => $value) {
+                if ($value) {
+                    $errors[$key] = 'Please, submit required ' . $key . '.';
+                }
+            }
+
+            foreach ($this->attributes as $key => $value) {
+                if (!is_numeric($value)) {
+                    $errors[$key] = 'Please, submit numeric ' . $key . '.';
+                }
+            }
+
+            return $errors;
+        }
+
+        return $errors;
     }
 
     public function save()

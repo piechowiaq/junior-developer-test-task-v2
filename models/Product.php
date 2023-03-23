@@ -13,13 +13,13 @@ class Product
     protected string $price;
     protected string $type;
 
-    public function __construct($id, $sku, $name, $price, $type) {
-        $this->id = $id;
-        $this->sku = $sku;
-        $this->name = $name;
-        $this->price = $price;
-        $this->type = $type;
-    }
+//    public function __construct($id, $sku, $name, $price, $type) {
+//        $this->id = $id;
+//        $this->sku = $sku;
+//        $this->name = $name;
+//        $this->price = $price;
+//        $this->type = $type;
+//    }
 
     public static function getAllProducts() {
         $db = Application::$app->db;
@@ -77,16 +77,32 @@ class Product
         return $this->id;
     }
 
+    public function setId($id){
+        $this->id = $id;
+    }
+
     public function getName() {
         return $this->name;
+    }
+
+    public function setName($name){
+        $this->name = $name;
     }
 
     public function getPrice() {
         return $this->price;
     }
 
+    public function setPrice($price) {
+        $this->price = $price;
+    }
+
     public function getSku() {
         return $this->sku;
+    }
+
+    public function setSku($sku) {
+        $this->sku = $sku;
     }
 
     public function validate(): array
@@ -113,18 +129,6 @@ class Product
             $errors['price'] = 'Please, submit numeric price.';
         }
 
-        foreach ($this->attributes as $key => $value) {
-                if (!($value)) {
-                    $errors[$key] = 'Please, submit required '.$key.'.';
-                }
-        }
-
-        foreach ($this->attributes as $key => $value) {
-            if (!is_numeric($value)) {
-                $errors[$key] = 'Please, submit numeric '.$key.'.';
-            }
-        }
-
         return $errors;
     }
 
@@ -145,11 +149,20 @@ class Product
         return $this->id;
     }
 
+    public function loadData($data)
+    {
+        foreach ($data as $key => $value) {
+
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+
+            }
+        }
+    }
+
 
     public static function delete($ids)
     {
-
-
         foreach ($ids as $id)
         {
             $query = "DELETE FROM products WHERE id = '" . $id . "'";

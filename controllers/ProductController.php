@@ -43,30 +43,24 @@ class ProductController extends Controller
             'book' => Book::class,
         ];
 
-        $errors = array();
         if (!array_key_exists($productType, $registry)) {
 
-            $errors['type'] = 'Please select the right product.';
+            $errors['type'] = 'Please select the right product type first.';
             $heading = "Product Add";
 
             return $this->render('create', [
                 'heading' => $heading,
                 'errors' => $errors
             ]);
-
         }
 
         $productClass = $registry[$productType];
 
-        $sku = $request->getData()['sku'];
-        $name = $request->getData()['name'];
-        $price = $request->getData()['price'];
-        $type = $request->getData()['type'];
-        $attributes = $request->getData()['attributes'];
-
-        $product = new $productClass(null, $sku, $name, $price, $type, $attributes);
+        $product = new $productClass();
 
         assert($product instanceof Product);
+
+        $product->loadData($request->getData());
 
         $errors = $product->validate();
 
