@@ -35,34 +35,55 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $productType = $request->getData()['type'];
+        $errors = [];
 
-        $registry = [
-            'furniture' => Furniture::class,
-            'dvd' => DVD::class,
-            'book' => Book::class,
-        ];
-
-        if (!array_key_exists($productType, $registry)) {
-
-            $errors['type'] = 'Please select the right product type first.';
-            $heading = "Product Add";
-
-            return $this->render('create', [
-                'heading' => $heading,
-                'errors' => $errors
-            ]);
+        if (!$request->getData()['sku']){
+            $errors['sku'] = 'Please, submit required SKU.';
         }
 
-        $productClass = $registry[$productType];
+        if (!$request->getData()['name']){
+            $errors['name'] = 'Please, submit required name.';
+        }
 
-        $product = new $productClass();
+        if (!$request->getData()['price']){
+            $errors['price'] = 'Please, submit required price.';
+        }
 
-        assert($product instanceof Product);
+        if (!$request->getData()['type']){
+            $errors['type'] = 'Please, select required type.';
+        }
 
-        $product->loadData($request->getData());
+        if (!is_numeric($request->getData()['price'])){
+            $errors['price'] = 'Please, submit numeric price.';
+        }
 
-        $errors = $product->validate();
+        if(!is_null($request->getData()['attributes'])) {
+
+            foreach ($request->getData()['attributes'] as $key => $value) {
+                if ($value) {
+                    $errors[$key] = 'Please, submit required ' . $key . '.';
+                }
+            }
+
+            foreach ($request->getData()['attributes'] as $key => $value) {
+                if (!is_numeric($value)) {
+                    $errors[$key] = 'Please, submit numeric ' . $key . '.';
+                }
+            }
+        }
+
+
+
+//        if (!array_key_exists($productType, $registry)) {
+//
+//            $errors['type'] = 'Please select the right product type first.';
+//            $heading = "Product Add";
+//
+//            return $this->render('create', [
+//                'heading' => $heading,
+//                'errors' => $errors
+//            ]);
+//        }
 
         if (!empty($errors)){
 
@@ -74,6 +95,22 @@ class ProductController extends Controller
             ]);
         }
 
+        $productType = $request->getData()['type'];
+
+        $registry = [
+            'furniture' => Furniture::class,
+            'dvd' => DVD::class,
+            'book' => Book::class,
+        ];
+
+        $productClass = $registry[$productType];
+
+        $product = new $productClass();
+
+        assert($product instanceof Product);
+
+        $product->loadData($request->getData());
+
         $product->save();
 
         $heading = "Product Add";
@@ -83,6 +120,7 @@ class ProductController extends Controller
             'heading' => $heading,
             'products' => $products
         ]);
+
     }
 
     public function delete(Request $request)

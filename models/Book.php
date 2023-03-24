@@ -8,12 +8,6 @@ class Book extends Product
 {
     protected $attributes;
 
-    public function __construct($id, $sku, $name, $price, $type, $attributes) {
-        parent::__construct($id, $sku, $name, $price, $type);
-        $this->attributes = $attributes;
-
-    }
-
     public function getAttributes(): string
     {
         return "Weight: " . $this->attributes['weight'] . " KG";
