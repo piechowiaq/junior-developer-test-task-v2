@@ -4,7 +4,7 @@ use app\controllers\ProductController;
 use app\core\Application;
 
 require_once __DIR__.'/../vendor/autoload.php';
-$config = require __DIR__.'/../config.php';
+$config = require __DIR__ . '/../config.php';
 
 
 $app = new Application(dirname(__DIR__), $config);
